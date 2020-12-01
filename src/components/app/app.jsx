@@ -1,9 +1,12 @@
 import React from 'react';
+import withBookstoreService from '../hoc/with-bookstore-service';
 
-const App = () => {
+const App = ({ bookstoreService }) => {
+    console.log(bookstoreService.getBooks()); // [массив книг]
     return (
       <h1>ReStore</h1>
     );
 };
 
-export default App;
+// Обернул компонент в HOC для получения сервиса
+export default withBookstoreService()(App);
