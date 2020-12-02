@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
+import { booksLoaded } from '../../actions';
 
 class BookList extends Component {
 
@@ -43,13 +44,12 @@ const mapStateToProps = (state) => {
 
 // 2.1 эта ф-я определяет какие функции вернутся в компонент в виде пропсов:
 // возвращает объект, где ключ - имя нового пропа доступного компоненту, а значение - ф-я которую нужно вызывать в п. 2.2
+
+// То же самое, но чуть лаконичней
 const mapDispatchToProps = (dispatch) => {
     return {
       booksLoaded: (newBooks) => {
-          dispatch({
-              type: 'BOOKS_LOADED',
-              payload: newBooks
-          });
+          dispatch(booksLoaded(newBooks));
       }
     };
 };
