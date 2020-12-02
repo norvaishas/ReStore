@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
+import withBookstoreService from '../hoc/with-bookstore-service';
 
 class BookList extends Component {
+
+    componentDidMount() {
+        // 1. получить данные
+        const {bookstoreService} = this.props; // получен из withBookstoreService
+        const books = bookstoreService.getBooks();
+
+
+        // 2. отправить действие в редюсер:
+            // 2.1 создать и передать mapDispatchToProps
+
+        // 2.2 теперь чтоб передать полученные данные в стейт, нужно отправить действие и сами данные в редюсер:
+        this.props.booksLoaded(books);
+    }
 
     render() {
         const {books} = this.props;
@@ -27,4 +41,17 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps)(BookList);
+// 2.1 эта ф-я определяет какие функции вернутся в компонент в виде пропсов:
+// возвращает объект, где ключ - имя нового пропа доступного компоненту, а значение - ф-я которую нужно вызывать в п. 2.2
+const mapDispatchToProps = (dispatch) => {
+    return {
+      booksLoaded: (newBooks) => {
+          dispatch({
+              type: 'BOOKS_LOADED',
+              payload: newBooks
+          });
+      }
+    };
+};
+
+export default withBookstoreService()(connect(mapStateToProps, mapDispatchToProps)(BookList));
