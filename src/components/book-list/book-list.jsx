@@ -4,6 +4,7 @@ import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
 import { booksLoaded } from '../../actions';
 import './book-list.css';
+import Spinner from '../spinner/spinner';
 
 class BookList extends Component {
 
@@ -17,7 +18,12 @@ class BookList extends Component {
     }
 
     render() {
-        const {books} = this.props;
+        const {books, loading} = this.props;
+        console.log(loading, books);
+
+        if (loading) {
+            return <Spinner/>
+        }
 
         return (
           <ul className='book-list'>
@@ -35,7 +41,8 @@ class BookList extends Component {
 // эта функция определяет какие именно данные из redux будут переданны в компонент
 const mapStateToProps = (state) => {
     return {
-        books: state.books
+        books: state.books,
+        loading: state.loading
     };
 };
 
