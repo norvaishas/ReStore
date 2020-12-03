@@ -5,20 +5,18 @@ export default class BookstoreService {
         return [
             {
                 id: '1',
-                title: 'Book-1',
-                author: 'Author-1'
+                title: 'Learning React: Functional Web Development with React and Redux',
+                author: 'Alex Banks and Eve Porcello',
+                price: 50,
+                coverImage: 'https://images-na.ssl-images-amazon.com/images/I/7169mYAhsmL.jpg'
             },
 
             {
                 id: '2',
-                title: 'Book-2',
-                author: 'Author-2'
-            },
-
-            {
-                id: '3',
-                title: 'Book-3',
-                author: 'Author-3'
+                title: 'Learning React: A Hands-On Guide to Building Web Applications Using React and Redux',
+                author: 'Kirupa Chinnathambi',
+                price: 32,
+                coverImage: 'https://images-na.ssl-images-amazon.com/images/I/51bBG0BOZwL.jpg'
             }
         ];
     };

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
 import { booksLoaded } from '../../actions';
+import './book-list.css';
 
 class BookList extends Component {
 
@@ -23,7 +24,7 @@ class BookList extends Component {
         const {books} = this.props;
 
         return (
-          <ul>
+          <ul className='book-list'>
               {
                   books.map(elem => {
                       const {id, ...book} = elem;
