@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
-import { booksLoaded } from '../../actions';
+import {booksLoaded, booksRequested} from '../../actions';
 import './book-list.css';
 import Spinner from '../spinner/spinner';
 
@@ -10,7 +10,8 @@ class BookList extends Component {
 
     componentDidMount() {
         // 1. получить данные
-        const {bookstoreService, booksLoaded} = this.props; // получен из withBookstoreService
+        const {bookstoreService, booksLoaded, booksRequested} = this.props;
+        booksRequested(); // меняет loading на true
         bookstoreService.getBooks()
         // 2. отправить действие в редюсер:
           // 2.2 теперь данные отправляются при успешном выполнении промиса
@@ -54,7 +55,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
       booksLoaded: (newBooks) => {
           dispatch(booksLoaded(newBooks));
-      }
+      },
+      booksRequested: () => dispatch(booksRequested()) // экшн-крийэтер нужно вызывать сразу, а не передавать как колбэк
     };
 };
 
