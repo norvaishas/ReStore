@@ -9,15 +9,11 @@ class BookList extends Component {
 
     componentDidMount() {
         // 1. получить данные
-        const {bookstoreService} = this.props; // получен из withBookstoreService
-        const books = bookstoreService.getBooks();
-
-
+        const {bookstoreService, booksLoaded} = this.props; // получен из withBookstoreService
+        bookstoreService.getBooks()
         // 2. отправить действие в редюсер:
-            // 2.1 создать и передать mapDispatchToProps
-
-        // 2.2 теперь чтоб передать полученные данные в стейт, нужно отправить действие и сами данные в редюсер:
-        this.props.booksLoaded(books);
+          // 2.2 теперь данные отправляются при успешном выполнении промиса
+          .then(books => booksLoaded(books));
     }
 
     render() {
