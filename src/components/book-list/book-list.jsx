@@ -2,28 +2,37 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
-import {booksLoaded, booksRequested} from '../../actions';
+import {booksLoaded, booksRequested, booksError} from '../../actions';
 import './book-list.css';
 import Spinner from '../spinner/spinner';
+import ErrorIndicator from '../error-indicator/error-indicator';
 
 class BookList extends Component {
 
     componentDidMount() {
         // 1. получить данные
-        const {bookstoreService, booksLoaded, booksRequested} = this.props;
+        const {bookstoreService, booksLoaded, booksRequested, booksError} = this.props;
         booksRequested(); // меняет loading на true
         bookstoreService.getBooks()
         // 2. отправить действие в редюсер:
           // 2.2 теперь данные отправляются при успешном выполнении промиса
-          .then(books => booksLoaded(books));
+          .then(books => booksLoaded(books))
+          .catch(error => {
+              console.log(error);
+              return booksError(error);
+          });
     }
 
     render() {
-        const {books, loading} = this.props;
-        console.log(loading, books);
+        const {books, loading, error} = this.props;
+        console.log(error);
 
         if (loading) {
             return <Spinner/>
+        }
+
+        if (error !== null) {
+            return <ErrorIndicator/>
         }
 
         return (
@@ -43,7 +52,8 @@ class BookList extends Component {
 const mapStateToProps = (state) => {
     return {
         books: state.books,
-        loading: state.loading
+        loading: state.loading,
+        error: state.error
     };
 };
 
@@ -56,7 +66,8 @@ const mapDispatchToProps = (dispatch) => {
       booksLoaded: (newBooks) => {
           dispatch(booksLoaded(newBooks));
       },
-      booksRequested: () => dispatch(booksRequested()) // экшн-крийэтер нужно вызывать сразу, а не передавать как колбэк
+      booksRequested: () => dispatch(booksRequested()), // экшн-крийэтер нужно вызывать сразу, а не передавать как колбэк
+      booksError: () => dispatch(booksError())
     };
 };
 

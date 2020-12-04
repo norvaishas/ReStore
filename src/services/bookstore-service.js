@@ -22,10 +22,12 @@ export default class BookstoreService {
     getBooks() {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve(this.data)
+                if (Math.random() > 0.75) {
+                    reject(new Error('Something went wrong'));
+                } else {
+                    resolve(this.data)
+                }
             }, 900)
-        })
-          /*.then( result => result.json())
-          .then(res => console.log(res))*/
+        });
     };
 };
