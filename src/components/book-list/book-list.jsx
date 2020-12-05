@@ -10,22 +10,11 @@ import ErrorIndicator from '../error-indicator/error-indicator';
 class BookList extends Component {
 
     componentDidMount() {
-        // 1. получить данные
-        const {bookstoreService, booksLoaded, booksRequested, booksError} = this.props;
-        booksRequested(); // меняет loading на true
-        bookstoreService.getBooks()
-        // 2. отправить действие в редюсер:
-          // 2.2 теперь данные отправляются при успешном выполнении промиса
-          .then(books => booksLoaded(books))
-          .catch(error => {
-              console.log(error);
-              return booksError(error);
-          });
+        this.props.fetchBooks();
     }
 
     render() {
         const {books, loading, error} = this.props;
-        console.log(error);
 
         if (loading) {
             return <Spinner/>
@@ -60,14 +49,15 @@ const mapStateToProps = (state) => {
 // 2.1 эта ф-я определяет какие функции вернутся в компонент в виде пропсов:
 // возвращает объект, где ключ - имя нового пропа доступного компоненту, а значение - ф-я которую нужно вызывать в п. 2.2
 
-// То же самое, но чуть лаконичней
-const mapDispatchToProps = (dispatch) => {
+// Теперь компонент вместо 3 функций получит только fetchBooks
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-      booksLoaded: (newBooks) => {
-          dispatch(booksLoaded(newBooks));
-      },
-      booksRequested: () => dispatch(booksRequested()), // экшн-крийэтер нужно вызывать сразу, а не передавать как колбэк
-      booksError: () => dispatch(booksError())
+        fetchBooks: () => {
+            dispatch(booksRequested());
+            ownProps.bookstoreService.getBooks()
+              .then(books => dispatch(booksLoaded(books)))
+              .catch(error => dispatch(booksError(error)))
+        }
     };
 };
 
