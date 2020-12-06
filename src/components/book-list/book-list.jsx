@@ -7,11 +7,26 @@ import './book-list.css';
 import Spinner from '../spinner/spinner';
 import ErrorIndicator from '../error-indicator/error-indicator';
 
-class BookList extends Component {
+// Презентационный компонент - его задача просто отрендерить полученные данные
+const BookList = ({books}) => {
+    return (
+      <ul className='book-list'>
+          {
+              books.map(elem => {
+                  const {id, ...book} = elem;
+                  return <BookListItem key={id} book={book}/>
+              })
+          }
+      </ul>
+    );
+};
+
+// Компонент контейнер - работает с Redux, реализует loading, error и другую логику
+class BookListContainer extends Component {
 
     componentDidMount() {
         this.props.fetchBooks();
-    }
+    };
 
     render() {
         const {books, loading, error} = this.props;
@@ -25,14 +40,7 @@ class BookList extends Component {
         }
 
         return (
-          <ul className='book-list'>
-              {
-                  books.map(elem => {
-                      const {id, ...book} = elem;
-                      return <BookListItem key={id} book={book}/>
-                  })
-              }
-          </ul>
+          <BookList books={books}/>
         )
     };
 }
@@ -61,4 +69,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     };
 };
 
-export default withBookstoreService()(connect(mapStateToProps, mapDispatchToProps)(BookList));
+export default withBookstoreService()(connect(mapStateToProps, mapDispatchToProps)(BookListContainer));
