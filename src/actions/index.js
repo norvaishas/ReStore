@@ -18,9 +18,17 @@ const booksError = (error) => {
     };
 };
 
+const bookAddedToCard = (bookId) => {
+    return {
+        type: 'BOOK_ADDED_TO_CART',
+        payload: bookId
+    };
+};
+
 
 export {
     booksLoaded,
     booksRequested,
-    booksError
+    booksError,
+    bookAddedToCard
 };

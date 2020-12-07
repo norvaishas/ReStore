@@ -2,19 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../book-list-item/book-list-item';
 import withBookstoreService from '../hoc/with-bookstore-service';
-import {booksLoaded, booksRequested, booksError} from '../../actions';
+import {booksLoaded, booksRequested, booksError, bookAddedToCard} from '../../actions';
 import './book-list.css';
 import Spinner from '../spinner/spinner';
 import ErrorIndicator from '../error-indicator/error-indicator';
 
 // Презентационный компонент - его задача просто отрендерить полученные данные
-const BookList = ({books}) => {
+const BookList = ({books, onAddedToCart}) => {
     return (
       <ul className='book-list'>
           {
               books.map(elem => {
                   const {id, ...book} = elem;
-                  return <BookListItem key={id} book={book}/>
+                  return <BookListItem
+                    key={id}
+                    book={book}
+                    onAddedToCart={() => onAddedToCart(id)}
+                  />
               })
           }
       </ul>
@@ -29,7 +33,7 @@ class BookListContainer extends Component {
     };
 
     render() {
-        const {books, loading, error} = this.props;
+        const {books, loading, error, onAddedToCart} = this.props;
 
         if (loading) {
             return <Spinner/>
@@ -40,7 +44,7 @@ class BookListContainer extends Component {
         }
 
         return (
-          <BookList books={books}/>
+          <BookList books={books} onAddedToCart={onAddedToCart}/>
         )
     };
 }
@@ -65,7 +69,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             ownProps.bookstoreService.getBooks()
               .then(books => dispatch(booksLoaded(books)))
               .catch(error => dispatch(booksError(error)))
-        }
+        },
+        onAddedToCart: (id) => dispatch(bookAddedToCard(id))
     };
 };
 
